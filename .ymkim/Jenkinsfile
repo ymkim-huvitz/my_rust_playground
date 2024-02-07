@@ -25,6 +25,7 @@ pipeline {
                     message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
                     threadByJob: true
 
+                sh 'export'
                 sh 'cd hello_world && cross build --release --target x86_64-pc-windows-gnu'
             }
         }
