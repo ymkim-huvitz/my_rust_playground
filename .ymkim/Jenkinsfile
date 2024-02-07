@@ -11,18 +11,18 @@ pipeline {
                     threadByJob: true
 
                 echo "Building..."
-                sh 'cd hello_world && cargo build --releaseh'
+                sh 'cd hello_world && cargo build --release'
             }
         }
-        // stage('Archive') {
-        //     when {
-        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-        //     }
-        //     steps {
-        //         echo "Archiving artifacts..."
-        //         archiveArtifacts artifacts: '**/*.BIN*', fingerprint: true
-        //     }
-        // }
+        stage('Archive') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                echo "Archiving artifacts..."
+                archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
+            }
+        }
     }
     post {
         always {
