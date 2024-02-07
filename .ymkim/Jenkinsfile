@@ -25,10 +25,14 @@ pipeline {
                     message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
                     threadByJob: true
 
-                sh 'export'
-                sh 'ls -al'
-                sh 'tree'
-                //sh 'cd hello_world && cross build --release --target x86_64-pc-windows-gnu'
+                sh '''
+                    export
+                    ls -al
+                    tree
+                    cd hello_world
+                    cargo clean
+                    cross build --release --target x86_64-pc-windows-gnu
+                '''
             }
         }
         stage('Archive') {
@@ -37,7 +41,7 @@ pipeline {
             }
             steps {
                 echo "Archiving artifacts..."
-                archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
+                //archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
             }
         }
     }
