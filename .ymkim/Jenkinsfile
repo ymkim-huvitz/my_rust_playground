@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label: "moon_build_ubuntu || sun64"
+    }
     environment {
         GOOGLE_CHAT_TOKEN = credentials('google-chat-token-ymkim')
     }
