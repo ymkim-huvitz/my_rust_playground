@@ -16,21 +16,22 @@ pipeline {
                     threadByJob: true
 
                 echo "Building..."
-                sh 'cd hello_world && cargo build --release'
+                sh '''
+                    export
+                    tree
+                    cd hello_world 
+                    cargo build --release
+                '''
             }
         }
         stage('target: x86_64-pc-windows-gnu') {
             steps {
-                hangoutsNotify token: "$GOOGLE_CHAT_TOKEN",
-                    message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
-                    threadByJob: true
-
                 sh '''
                     export
-                    ls -al
                     tree
                     cd hello_world
-                    cargo clean
+                    pwd
+                    ls -al
                     cross build --release --target x86_64-pc-windows-gnu
                 '''
             }
