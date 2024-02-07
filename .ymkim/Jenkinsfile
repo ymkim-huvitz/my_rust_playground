@@ -4,9 +4,12 @@ pipeline {
     }
     environment {
         GOOGLE_CHAT_TOKEN = credentials('google-chat-token-ymkim')
+
+        RUSTUP_HOME = "/opt/rust/rustup"
+        PATH = "$PATH:/opt/rust/cargo/bin"
     }
     stages {
-        stage('Build:Hello World') {
+        stage('target: host') {
             steps {
                 hangoutsNotify token: "$GOOGLE_CHAT_TOKEN",
                     message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
@@ -14,6 +17,15 @@ pipeline {
 
                 echo "Building..."
                 sh 'cd hello_world && cargo build --release'
+            }
+        }
+        stage('target: x86_64-pc-windows-gnu') {
+            steps {
+                hangoutsNotify token: "$GOOGLE_CHAT_TOKEN",
+                    message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
+                    threadByJob: true
+
+                sh 'cd hello_world && cross build --release --target x86_64-pc-windows-gnu'
             }
         }
         stage('Archive') {
