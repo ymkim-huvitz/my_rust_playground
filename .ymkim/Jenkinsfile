@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    environment {
+        GOOGLE_CHAT_TOKEN = credentials('google-chat-token-ymkim')
+    }
+    stages {
+        stage('Build:Hello World') {
+            steps {
+                hangoutsNotify token: "$GOOGLE_CHAT_TOKEN",
+                    message: "${env.BUILD_TIMESTAMP}\nSTART [${env.NODE_NAME}]",
+                    threadByJob: true
+
+                echo "Building..."
+                sh 'cd hello_world && cargo build --releaseh'
+            }
+        }
+        // stage('Archive') {
+        //     when {
+        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        //     }
+        //     steps {
+        //         echo "Archiving artifacts..."
+        //         archiveArtifacts artifacts: '**/*.BIN*', fingerprint: true
+        //     }
+        // }
+    }
+    post {
+        always {
+            echo "Google Chat Notification: ${currentBuild.currentResult}"
+            hangoutsNotify token: "$GOOGLE_CHAT_TOKEN",
+                message: "END [${currentBuild.currentResult}]",
+                threadByJob: true
+        }
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "5", artifactNumToKeepStr: "5" ))
+    }
+}
