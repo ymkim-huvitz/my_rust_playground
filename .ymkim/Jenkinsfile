@@ -26,7 +26,9 @@ pipeline {
                     threadByJob: true
 
                 sh 'export'
-                sh 'cd hello_world && cross build --release --target x86_64-pc-windows-gnu'
+                sh 'ls -al'
+                sh 'tree'
+                //sh 'cd hello_world && cross build --release --target x86_64-pc-windows-gnu'
             }
         }
         stage('Archive') {
