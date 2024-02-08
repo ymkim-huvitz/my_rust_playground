@@ -67,7 +67,7 @@ pipeline {
             }
             steps {
                 echo "Archiving artifacts..."
-                archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true, name: 'host'
+                archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
                 archiveArtifacts artifacts: "/tmp/${env.BUILD_TAG}/hello_world/**/x86_64-pc-windows-gnu/release/*.exe", fingerprint: true
             }
         }
