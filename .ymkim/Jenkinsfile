@@ -24,9 +24,16 @@ pipeline {
                 '''
             }
         }
+        stage('prepare cross compile workdir') {
+            steps {
+                mkdir -p /tmp/${env.BUILD_ID}
+                cp -r . /tmp/${env.BUILD_ID}
+            }
+        }
         stage('target: x86_64-pc-windows-gnu') {
             steps {
                 sh '''
+                    cd /tmp/${env.BUILD_ID}
                     export
                     tree
                     cd hello_world
