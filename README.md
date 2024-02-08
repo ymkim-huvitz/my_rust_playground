@@ -29,8 +29,8 @@ This repository serves as my personal space for learning and experimenting with 
 
 Explore my Rust projects and see how I apply Rust to solve real-world problems.
 
-1. [Project One](./projects/project_one): A brief description of the first project.
-2. [Project Two](./projects/project_two): Another exciting project with Rust.
+1. [Hello World](./hello_world): My first rust "Hello World".
+2. [Project Two](./projects/project_two): Another exciting project with Rust. (not yet)
 
 Feel free to dive into the project directories for detailed information and source code.
 
@@ -38,8 +38,7 @@ Feel free to dive into the project directories for detailed information and sour
 
 Challenge yourself with Rust coding exercises and improve your skills.
 
-1. [Challenge One](./challenges/challenge_one): Description and solution for the first Rust challenge.
-2. [Challenge Two](./challenges/challenge_two): Take on the second challenge and enhance your Rust knowledge.
+1. [Challenge One](./challenges/challenge_one): Description and solution for the first Rust challenge. (not yet)
 
 ## Contributing
 
