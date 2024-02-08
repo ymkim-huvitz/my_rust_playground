@@ -2,7 +2,7 @@
 
 Welcome to My Rust Playground! 🚀
 
-[![Rust](https://img.shields.io/badge/Rust-1.58.0-orange)](https://www.rust-lang.org/)
+[![Rust](https://img.shields.io/badge/Rust-1.75.0-orange)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 This repository serves as my personal space for learning and experimenting with the Rust programming language. Here, you'll find a collection of code snippets, projects, and challenges that showcase my journey in mastering Rust.
