@@ -78,7 +78,7 @@ pipeline {
                     cp -f /tmp/${env.BUILD_TAG}/hello_world/target/x86_64-unknown-linux-gnu/release/hello_world ./output/x86_64-unknown-linux-gnu/
                 """
                 archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
-                archiveArtifacts artifacts: '**/output/**/hello_world', '**/output/**/hello_world.exe', fingerprint: true
+                archiveArtifacts artifacts: '**/output/**', fingerprint: true
             }
         }
         stage('clean workdir') {
