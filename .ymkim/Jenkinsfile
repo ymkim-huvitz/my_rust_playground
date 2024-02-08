@@ -26,15 +26,16 @@ pipeline {
         }
         stage('prepare cross compile workdir') {
             steps {
-                sh '''
+                sh """
+                    echo "BUILD_ID=${env.BUILD_ID}"
                     mkdir -p /tmp/${env.BUILD_ID}
                     cp -r . /tmp/${env.BUILD_ID}
-                '''
+                """
             }
         }
         stage('target: x86_64-pc-windows-gnu') {
             steps {
-                sh '''
+                sh """
                     cd /tmp/${env.BUILD_ID}
                     export
                     tree
@@ -42,7 +43,7 @@ pipeline {
                     pwd
                     ls -al
                     cross build --release --target x86_64-pc-windows-gnu
-                '''
+                """
             }
         }
         stage('Archive') {
