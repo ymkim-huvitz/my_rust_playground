@@ -7,6 +7,7 @@ pipeline {
 
         RUSTUP_HOME = "/opt/rust/rustup"
         PATH = "$PATH:/opt/rust/cargo/bin"
+
     }
     stages {
         stage('target: host') {
@@ -17,8 +18,6 @@ pipeline {
 
                 echo "Building..."
                 sh '''
-                    export
-                    tree
                     cd hello_world 
                     cargo build --release
                 '''
@@ -27,22 +26,38 @@ pipeline {
         stage('prepare cross compile workdir') {
             steps {
                 sh """
-                    echo "BUILD_ID=${env.BUILD_ID}"
-                    mkdir -p /tmp/${env.BUILD_ID}
-                    cp -r . /tmp/${env.BUILD_ID}
+                    mkdir -p /tmp/${env.BUILD_TAG}
+                    cp -r . /tmp/${env.BUILD_TAG}
                 """
             }
         }
-        stage('target: x86_64-pc-windows-gnu') {
+        stage('target: windows') {
             steps {
                 sh """
-                    cd /tmp/${env.BUILD_ID}
-                    export
-                    tree
+                    cd /tmp/${env.BUILD_TAG}
                     cd hello_world
-                    pwd
-                    ls -al
                     cross build --release --target x86_64-pc-windows-gnu
+                    cross build --release --target i686-pc-windows-gnu
+                """
+            }
+        }
+        stage('target: arm') {
+            steps {
+                sh """
+                    cd /tmp/${env.BUILD_TAG}
+                    cd hello_world
+                    cross build --release --target armv7-unknown-linux-gnueabihf
+                    cross build --release --target aarch64-unknown-linux-gnu
+                """
+            }
+        }
+        stage('target: linux') {
+            steps {
+                sh """
+                    cd /tmp/${env.BUILD_TAG}
+                    cd hello_world
+                    cross build --release --target i686-unknown-linux-gnu
+                    cross build --release --target x86_64-unknown-linux-gnu
                 """
             }
         }
@@ -52,7 +67,15 @@ pipeline {
             }
             steps {
                 echo "Archiving artifacts..."
-                //archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
+                archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true, name: 'host'
+                archiveArtifacts artifacts: "/tmp/${env.BUILD_TAG}/hello_world/**/x86_64-pc-windows-gnu/release/*.exe", fingerprint: true, name: 'x86_64-pc-windows-gnu'
+            }
+        }
+        stage('clean workdir') {
+            steps {
+                sh """
+                    rm -rf /tmp/${env.BUILD_TAG}
+                """
             }
         }
     }
