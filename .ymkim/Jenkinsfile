@@ -28,7 +28,6 @@ pipeline {
                 sh """
                     mkdir -p /tmp/${env.BUILD_TAG}
                     cp -r . /tmp/${env.BUILD_TAG}
-                    mkdir -p output
                 """
             }
         }
@@ -38,9 +37,7 @@ pipeline {
                     cd /tmp/${env.BUILD_TAG}
                     cd hello_world
                     cross build --release --target x86_64-pc-windows-gnu
-                    cp -f target/x86_64-pc-windows-gnu/release/hello_world.exe ${env.WORKSPACE}/output
                     cross build --release --target i686-pc-windows-gnu
-                    cp -f target/i686-pc-windows-gnu/release/hello_world.exe ${env.WORKSPACE}/output
                 """
             }
         }
@@ -50,9 +47,7 @@ pipeline {
                     cd /tmp/${env.BUILD_TAG}
                     cd hello_world
                     cross build --release --target armv7-unknown-linux-gnueabihf
-                    cp -f target/armv7-unknown-linux-gnueabihf/release/hello_world ${env.WORKSPACE}/output
                     cross build --release --target aarch64-unknown-linux-gnu
-                    cp -f target/aarch64-unknown-linux-gnu/release/hello_world ${env.WORKSPACE}/output
                 """
             }
         }
@@ -62,9 +57,7 @@ pipeline {
                     cd /tmp/${env.BUILD_TAG}
                     cd hello_world
                     cross build --release --target i686-unknown-linux-gnu
-                    cp -f target/i686-unknown-linux-gnu/release/hello_world ${env.WORKSPACE}/output
                     cross build --release --target x86_64-unknown-linux-gnu
-                    cp -f target/x86_64-unknown-linux-gnu/release/hello_world ${env.WORKSPACE}/output
                 """
             }
         }
@@ -74,6 +67,16 @@ pipeline {
             }
             steps {
                 echo "Archiving artifacts..."
+                sh """
+                    mkdir -p output && mkdir -p output/x86_64-pc-windows-gnu && mkdir -p output/i686-pc-windows-gnu && mkdir -p output/armv7-unknown-linux-gnueabihf && mkdir -p output/aarch64-unknown-linux-gnu && mkdir -p output/i686-unknown-linux-gnu && mkdir -p output/x86_64-unknown-linux-gnu
+
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/x86_64-pc-windows-gnu/release/hello_world.exe ./output/x86_64-pc-windows-gnu/
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/i686-pc-windows-gnu/release/hello_world.exe ./output/i686-pc-windows-gnu/
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/armv7-unknown-linux-gnueabihf/release/hello_world ./output/armv7-unknown-linux-gnueabihf/
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/aarch64-unknown-linux-gnu/release/hello_world ./output/aarch64-unknown-linux-gnu/
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/i686-unknown-linux-gnu/release/hello_world ./output/i686-unknown-linux-gnu/
+                    cp -f /tmp/${env.BUILD_TAG}/hello_world/target/x86_64-unknown-linux-gnu/release/hello_world ./output/x86_64-unknown-linux-gnu/
+                """
                 archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
                 archiveArtifacts artifacts: '**/output/*', fingerprint: true
             }
