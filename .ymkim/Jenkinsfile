@@ -68,7 +68,8 @@ pipeline {
             steps {
                 echo "Archiving artifacts..."
                 archiveArtifacts artifacts: '**/release/hello_world', fingerprint: true
-                archiveArtifacts artifacts: "/tmp/${env.BUILD_TAG}/hello_world/**/x86_64-pc-windows-gnu/release/*.exe", fingerprint: true
+                archiveArtifacts artifacts: "/tmp/${env.BUILD_TAG}/hello_world/target/x86_64-pc-windows-gnu/release/hello_world.exe", fingerprint: true
+                archiveArtifacts artifacts: "/tmp/${env.BUILD_TAG}/hello_world/target/i686-pc-windows-gnu/release/hello_world.exe", fingerprint: true
             }
         }
         stage('clean workdir') {
