@@ -1,7 +1,7 @@
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 
-const ADDR: &str = "127.0.0.1:8279";
+const ADDR: &str = "0.0.0.0:8279";
 
 fn handle_client(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
