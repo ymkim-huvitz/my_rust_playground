@@ -20,6 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     acceptor.set_ca_file(ROOT_CA_PATH)?;
 
     acceptor.check_private_key()?;
+
     let acceptor = acceptor.build();
 
     // TCP 리스너 생성
@@ -37,6 +38,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         continue;
                     }
                 };
+
+                println!("TLS version: {:?}", ssl_stream.ssl().version_str());
 
                 // 클라이언트 인증서 검증
                 if let Some(cert) = ssl_stream.ssl().peer_certificate() {

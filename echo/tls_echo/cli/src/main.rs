@@ -1,4 +1,4 @@
-use openssl::ssl::{SslConnector, SslFiletype, SslMethod};
+use openssl::ssl::{SslConnector, SslMethod};
 use std::io::{self, Read, Write};
 use std::net::TcpStream;
 
@@ -16,6 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 서버에 연결
     let stream = TcpStream::connect(SERVER_ADDRESS)?;
     let mut ssl_stream = connector.connect(SERVER_HOSTNAME, stream)?;
+
+    println!("TLS version: {:?}", ssl_stream.ssl().version_str());
 
     println!("Connected. Enter message(type 'quit' to exit):");
 

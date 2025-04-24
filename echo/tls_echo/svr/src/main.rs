@@ -14,6 +14,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     acceptor.set_private_key_file(SERVER_KEY_PATH, SslFiletype::PEM)?;
     acceptor.set_certificate_chain_file(SERVER_CERT_PATH)?;
     acceptor.check_private_key()?;
+
+    // set tls version : 1.2 ok, 1.3 error
+    // acceptor.set_min_proto_version(Some(openssl::ssl::SslVersion::TLS1_2))?;
+    // acceptor.set_max_proto_version(Some(openssl::ssl::SslVersion::TLS1_3))?;
+
     let acceptor = acceptor.build();
 
     // TCP 리스너 생성
@@ -31,6 +36,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         continue;
                     }
                 };
+
+                println!("TLS version: {:?}", ssl_stream.ssl().version_str());
 
                 // 클라이언트로부터 데이터 수신
                 let mut buf = [0; 1024];
