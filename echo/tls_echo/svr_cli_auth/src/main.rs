@@ -6,7 +6,7 @@ const ROOT_CA_PATH: &str = "../certs/rootCA.pem";
 const SERVER_CERT_PATH: &str = "../certs/echo-server.pem";
 const SERVER_KEY_PATH: &str = "../certs/echo-server-key.pem";
 
-const BIND_ADDRESS: &str = "0.0.0.0:8279";
+const BIND_ADDRESS: &str = "0.0.0.0:8443";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // TLS acceptor 설정

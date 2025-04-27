@@ -1,22 +1,27 @@
-use openssl::ssl::{SslConnector, SslFiletype, SslMethod};
+use openssl::ssl::{SslConnector, SslMethod, SslVerifyMode};
+use std::env;
 use std::io::{self, Read, Write};
 use std::net::TcpStream;
-
-const ROOT_CA_PATH: &str = "../certs/rootCA.pem";
-const CLIENT_CERT_PATH: &str = "../certs/echo-client.pem";
-const CLIENT_KEY_PATH: &str = "../certs/echo-client-key.pem";
 
 const SERVER_ADDRESS: &str = "127.0.0.1:8443";
 const SERVER_HOSTNAME: &str = "echo-server";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 명령행 인자 처리
+    let args: Vec<String> = env::args().collect();
+    let skip_verify = args.iter().any(|arg| arg == "--skip-verify" || arg == "-s");
+
     // TLS connector 설정
     let mut connector = SslConnector::builder(SslMethod::tls())?;
-    connector.set_ca_file(ROOT_CA_PATH)?;
 
-    // 클라이언트 인증서 설정
-    connector.set_certificate_file(CLIENT_CERT_PATH, SslFiletype::PEM)?;
-    connector.set_private_key_file(CLIENT_KEY_PATH, SslFiletype::PEM)?;
+    if skip_verify {
+        println!("Warning: Certificate verification is disabled");
+        connector.set_verify(SslVerifyMode::NONE);
+    } else {
+        // 기본적으로 시스템의 공인 인증서를 사용
+        println!("Using system's trusted certificates");
+    }
+
     let connector = connector.build();
 
     // 서버에 연결
@@ -47,6 +52,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("recv: {}", response);
             }
             Err(e) => println!("read error: {}", e),
+        }
+
+        // 100ms 대기
+        std::thread::sleep(std::time::Duration::from_millis(100));
+
+        // 서버 연결 상태 확인
+        if ssl_stream.get_ref().peer_addr().is_err() {
+            println!("Server connection lost. Exiting loop.");
+            break;
         }
     }
 

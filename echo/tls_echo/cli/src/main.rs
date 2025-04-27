@@ -4,7 +4,7 @@ use std::net::TcpStream;
 
 const ROOT_CA_PATH: &str = "../certs/rootCA.pem";
 
-const SERVER_ADDRESS: &str = "127.0.0.1:8279";
+const SERVER_ADDRESS: &str = "127.0.0.1:8443";
 const SERVER_HOSTNAME: &str = "echo-server";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
